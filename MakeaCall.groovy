@@ -28,17 +28,24 @@ def invoke(){
 	capabilities.setCapability("platformVersion", "7.0");
 	capabilities.setCapability("platformName", "Android");
 
+	//list of packages: http://stackoverflow.com/questions/34769002/how-to-fetch-package-name-and-launcher-activity-from-android-apk
 	//capabilities.setCapability("androidPackage", "com.android.contacts");
-	capabilities.setCapability("appPackage","com.android.launcher3");
-    capabilities.setCapability("appClass","android.widget.TextView");
-
-	/*capabilities.setCapability("appPackage","com.google.android.contacts");
-    capabilities.setCapability("appActivity","com.android.contacts.activities.PeopleActivity");
+	//capabilities.setCapability("appPackage","com.android.launcher3");
+   //capabilities.setCapability("appClass","android.widget.TextView");
+	
+	
+//contacts.apk downloaded here
+	capabilities.setCapability("appPackage","com.android.contacts");
+	capabilities.setCapability("appActivity","com.android.contacts.common.dialog.CallSubjectDialog");
+	
+    /*capabilities.setCapability("appActivity","com.android.contacts.activities.PeopleActivity");
     */
 
     driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);//this works
     println "before starting to wait"
-     //driver.findElement(By.id("com.android.contacts:id/floating_action_button")).click();
+
+   // driver.findElement(By.id("com.android.messaging:id/android.widget.TextView")).click();
+    
     driver.manage().timeouts().implicitlyWait(20L, TimeUnit.SECONDS);
     println "done.."
 }
