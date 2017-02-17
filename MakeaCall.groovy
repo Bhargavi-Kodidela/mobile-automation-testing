@@ -19,8 +19,8 @@ import java.util.List;
 AppiumDriver driver;
 
 
-def invoke(){	
-	println "Invoking now"
+def eml_contacts(){	
+	println "Invoking Emulator device now"
 	DesiredCapabilities capabilities = new DesiredCapabilities();
 
 	capabilities.setCapability("deviceName", "Android");
@@ -28,26 +28,96 @@ def invoke(){
 	capabilities.setCapability("platformVersion", "7.0");
 	capabilities.setCapability("platformName", "Android");
 
-	//list of packages: http://stackoverflow.com/questions/34769002/how-to-fetch-package-name-and-launcher-activity-from-android-apk
-	//capabilities.setCapability("androidPackage", "com.android.contacts");
-	//capabilities.setCapability("appPackage","com.android.launcher3");
-   //capabilities.setCapability("appClass","android.widget.TextView");
-	
-	
-//contacts.apk downloaded here
 	capabilities.setCapability("appPackage","com.android.contacts");
-	capabilities.setCapability("appActivity","com.android.contacts.common.dialog.CallSubjectDialog");
-	
-    /*capabilities.setCapability("appActivity","com.android.contacts.activities.PeopleActivity");
-    */
-
+	//capabilities.setCapability("appActivity","com.android.contacts.common.dialog.CallSubjectDialog");
+    capabilities.setCapability("appActivity","com.android.contacts.activities.PeopleActivity");
+   
     driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);//this works
     println "before starting to wait"
 
-   // driver.findElement(By.id("com.android.messaging:id/android.widget.TextView")).click();
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    println "done.."
+}
+//invoke()
+   
+def mp_contacts(){	
+	println "Invoking mobilephone now"
+	DesiredCapabilities capabilities = new DesiredCapabilities();
+
+	capabilities.setCapability("deviceName", "Android")
+	capabilities.setCapability("platformVersion", "4.4.2")
+	capabilities.setCapability("platformName", "Android")
+
+    capabilities.setCapability("appPackage","com.asus.contacts")
+    capabilities.setCapability("appActivity","com.android.contacts.activities.PeopleActivity");
+
+    driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);//this works
+    println "before starting to wait"
+   
+    WebElement frameLayout = driver.findElement(By.className("android.widget.FrameLayout"));
+    println "Got a Frame layout @@@@@@"
+    println "Size is : " + frameLayout.getSize().toString()
+
+    WebElement horizontalScrollView = frameLayout.findElement(By.className("android.widget.HorizontalScrollView"))
+    println "Got a horizontalScrollView @@@@@@"
+    println "Size is : " + horizontalScrollView?.getSize().toString()
+
+
+    def linearLayout = horizontalScrollView.findElements(By.className("android.widget.LinearLayout"))
+    println linearLayout.class.name + "!!!!!!!!!"
+    linearLayout.each{ oneTab ->
+    	println oneTab.class.name + "----" + oneTab.getSize().toString()
+    	println oneTab.class.name + "----" + oneTab.getLocation().toString()
+
+    }
+  
+    linearLayout[1].click();
     
-    driver.manage().timeouts().implicitlyWait(20L, TimeUnit.SECONDS);
+    println "clicking Tab"
+
+    WebElement linearLayout1 = driver.findElement(By.id("com.asus.contacts:id/dialpad_container"))
+    println "Got a linearLayout1 #####"
+    println "Size is: " + linearLayout1.getSize().toString()
+
+    ['nine','five','nine'].each{
+    	linearLayout1.findElement(By.id("com.asus.contacts:id/"+it)).click()	
+    }
+    /*linearLayout1.findElement(By.id("com.asus.contacts:id/nine")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/eight")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/four")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/five")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/one")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/four")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/eight")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/three")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/five")).click()
+    linearLayout1.findElement(By.id("com.asus.contacts:id/one")).click()*/
+   // linearLayout1.sendKeys('Rahul vivasa').click()
+
+    driver.findElement(By.id("com.asus.contacts:id/dialButtonSim1")).click()
+
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
     println "done.."
 }
 
-invoke()
+def mp_settings(){	
+	println "Invoking mobile settings now"
+	DesiredCapabilities capabilities = new DesiredCapabilities();
+
+	capabilities.setCapability("deviceName", "Android");
+	capabilities.setCapability("platformVersion", "4.4.2");
+	capabilities.setCapability("platformName", "Android");
+
+    capabilities.setCapability("appPackage","com.facebook.katana")
+    capabilities.setCapability("appActivity","com.facebook.katana.LoginActivity");
+
+    driver = new AndroidDriver(new URL("http://127.0.0.1:4723/wd/hub"), capabilities);//this works
+    println "before starting to wait"
+   
+    driver.manage().timeouts().implicitlyWait(5, TimeUnit.SECONDS);
+    println "done.."
+}
+
+//eml_contacts()
+//mp_contacts()
+mp_settings()
